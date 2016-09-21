@@ -2,6 +2,7 @@ u"""Основной класс, оценивающий предложение""
 
 from enum import Enum
 import morpho_utils as mu
+from debug_log import LOG
 
 class EstimatorResult(Enum):
 	negative = -1
@@ -19,20 +20,27 @@ class SentimentalEstimator:
 
 	def process_sentence( self, sentence ):
 		u"""Обрабатываем предложение. Возвращает EstimatorResult"""
+		LOG.write( "START", sentence )
 		words = mu.split_sentece( sentence )
 
+		LOG.write( "SPLITTED", str( words ) )
 		total_positive = 0
 		total_negative = 0
 
 		for dict in self.dictionaries:
+			LOG.write("START DICTIONARY", dict["dict"].__class__.__name__)
 			scores = self.__scores_by_dictionary( dict["dict"], words )
 			total_positive = total_positive + dict["weight"] * scores["positive"]
 			total_negative = total_negative + dict["weight"] * scores["negative"]
+			LOG.write("END DICTIONARY", "p: %f, n: %f" % ( scores["positive"], scores["negative"] ) )
+
+		LOG.write( "TOTAL POSITIVE", str( total_positive ) )
+		LOG.write( "TOTAL NEGATIVE", str( total_negative ) )
 
 		result = total_positive - total_negative
 		if abs( result ) < self.neutral_treshold:
 			return EstimatorResult.neutral
-		elif self.neutral_treshold > 0:
+		elif result > 0:
 			return EstimatorResult.positive
 		else:
 			return EstimatorResult.negative
@@ -45,8 +53,11 @@ class SentimentalEstimator:
 			return result
 
 		for w in words:
-			result["positive"] = result["positive"] + dict.positive_score( w )
-			result["negative"] = result["negative"] + dict.negative_score( w )
+			positive_score = dict.positive_score( w )
+			negative_score = dict.negative_score( w )
+			result["positive"] = result["positive"] + positive_score
+			result["negative"] = result["negative"] + negative_score
+			LOG.write( w + " RESULT", "p: %d, n: %d" % ( positive_score, negative_score ) )
 
 		result["positive"] = result["positive"] / len( words )
 		result["negative"] = result["negative"] / len( words )

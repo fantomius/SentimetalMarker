@@ -26,9 +26,9 @@ def normalize_words( words ):
 	return result
 
 def split_sentece( sentece ):
-	u"""Разделяет предложение на слова, удаляет стоп-слова и знаки препинания"""
-	no_punctuators_string = re.sub(u"\\p{P}+", "", sentece)
-	words = nltk.word_tokenize( no_punctuators_string )
+	u"""Разделяет предложение на слова, удаляет стоп-слова, знаки препинания и цифры"""
+	clear_string = re.sub(u"[\\p{P}0-9]+", "", sentece)
+	words = nltk.word_tokenize( clear_string )
 	words = normalize_words( words )
 	return [w for w in words if w not in stopwords.words('russian')]
 

@@ -85,7 +85,7 @@ def main():
 
 	data_path = "data"
 	dictionaries_with_weights = [
-		{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 4.98448263 },
+		{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 1.98448263 },
 		{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
 		{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
 	]

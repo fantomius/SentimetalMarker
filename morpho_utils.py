@@ -28,7 +28,8 @@ def normalize_words( words ):
 
 def split_sentece( sentece ):
 	u"""Разделяет предложение на слова, удаляет стоп-слова, знаки препинания и цифры"""
-	clear_string = re.sub(u"[\\p{P}0-9]+", "", sentece)
+	clear_string_translation = str.maketrans('', '', string.digits + R"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~""")
+	clear_string = sentece.translate(clear_string_translation)
 	LOG.write( "CLEARED", clear_string )
 	words = nltk.word_tokenize( clear_string )
 	LOG.write( "TOKENIZED", str( words ) )

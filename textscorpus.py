@@ -74,15 +74,17 @@ def main():
 
 	data_path = "data"
 	dictionaries_with_weights = [
-		{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 1 },
-		{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 1 },
-		{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 1 }
+		{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 4.98448263 },
+		{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
+		{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
 	]
-	neutral_treshold = 0.1
+	neutral_treshold = 0.01818111
 
 	estimator = se.SentimentalEstimator( dictionaries_with_weights, neutral_treshold )
 	base = TextsCorpus( "base/texts.txt" )
-	print(get_sentences_quality(base.get_base()[0:100], estimator))
+	print(get_sentences_quality(base.get_negative()[0:100], estimator))
+	print(get_sentences_quality(base.get_positive()[0:100], estimator))
+	print(get_sentences_quality(base.get_neutral()[0:100], estimator))
 
 
 if __name__ == "__main__":

@@ -80,23 +80,14 @@ def get_sentences_quality( sentences, estimator ):
 
 #main
 def main():
-	import dictionaries
-	import sentimental_estimator as se
+	from estimator import create_estimator
 
-	data_path = "data"
-	dictionaries_with_weights = [
-		{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 1.98448263 },
-		{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
-		{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
-	]
-	neutral_treshold = 1.21818111
-
-	estimator = se.SentimentalEstimator( dictionaries_with_weights, neutral_treshold )
+	estimator = create_estimator( "data" )
 	base = TextsCorpus( "base/texts.txt" )
+	
 	print(get_sentences_quality(base.get_negative()[0:100], estimator))
 	print(get_sentences_quality(base.get_positive()[0:100], estimator))
 	print(get_sentences_quality(base.get_neutral()[0:100], estimator))
-
 
 if __name__ == "__main__":
 	main()

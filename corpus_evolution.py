@@ -1,4 +1,4 @@
-u"""Дифф эволюция параметром Estimator'а на основе корпуса"""
+u"""Дифф эволюция параметров Estimator'а на основе корпуса"""
 
 import scipy as sp
 import numpy as np
@@ -36,7 +36,7 @@ def MinimizationFunc( x ):
 	sentences.extend( np.random.choice( CORPUS.get_negative(), int( CHUNK_SIZE / 3 ), replace=False ).tolist() )
 	sentences.extend( np.random.choice( CORPUS.get_neutral(), int( CHUNK_SIZE / 3 ), replace=False ).tolist() )
 
-	correct, total = txts.get_sentences_quality( sentences, estimator )
+	correct, total, _, _, _ = txts.get_sentences_quality( sentences, estimator )
 
 	quality = ( total - correct ) / total
 	global ITERATION

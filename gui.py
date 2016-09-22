@@ -1,13 +1,13 @@
 import sys
 from PyQt4 import QtGui
 
-import dictionaries
-import sentimental_estimator as se
+from estimator import create_estimator
 from debug_log import LOG
 
 ELEMENT_MARGIN = 10
 
 class GuiDebugHandler(QtGui.QTextEdit):
+	u"""Debug Handler, реализованный в виде окна QT"""
 	def __init__(self):
 		super(GuiDebugHandler, self).__init__()
 		self.resize( 480, 480 )
@@ -21,12 +21,20 @@ class GuiDebugHandler(QtGui.QTextEdit):
 		self.setText( "" )
 
 class MainWindow(QtGui.QWidget):
+	u"""Главное окно приложения. Позволяет вводить текст,
+	показывать результат, устанавливает глобальный debug handler в GuiDebugHandler,
+	выводит информацию если где-то в estimator'е вылетело исключение"""
 	def __init__(self):
 		super(MainWindow, self).__init__()
 		self._init_GUI()
-		self._init_estimator()
+
+		try:
+			self.estimator = create_estimator( "data" )
+		except Exception as e:
+			self._handleException( e )
 
 	def _init_GUI( self ):
+		u"""Создаем GUI, располагая все в вертикальный стек"""
 		self.setWindowTitle("Sentimental Estimator")
 
 		vbox = QtGui.QVBoxLayout()
@@ -60,33 +68,23 @@ class MainWindow(QtGui.QWidget):
 		LOG.set_handler( debug_log )
 		LOG.set_enabled( True )
 
-	def _init_estimator(self):
-		data_path = "data"
-		dictionaries_with_weights = [
-			{ "dict": dictionaries.WobotDictionary( data_path ), "weight": 1.98448263 },
-			{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
-			{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
-		]
-		neutral_treshold = 1.21818111
-
-		self.estimator = se.SentimentalEstimator( dictionaries_with_weights, neutral_treshold )
-
 	def _onProcess( self ):
+		u"""Реакция на кнопку process. Запускаем estimator для введеного приложения"""
+		if self.estimator == None:
+			return
+
 		LOG.clear()
-		sentence = self.sentece_text.text()
-		result = self.estimator.process_sentence( sentence )
-		self.result_text.setText( str( result ) )
+		try:
+			sentence = self.sentece_text.text()
+			result = self.estimator.process_sentence( sentence )
+			self.result_text.setText( str( result ) )
+		except Exception as e:
+			self._handleException( e )
 
-def main():
-    
-    app = QtGui.QApplication(sys.argv)
-
-    w = MainWindow()
-    w.move(300, 300)
-    w.show()
-    
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
+	def _handleException(self, e):
+		u"""Реакция на исключение. Сбрасываем estimator в None (не пытаемся для простоты ничего реанимировать)
+		устанавливаем информацию об ошибке в GUI"""
+		self.estimator = None
+		self.result_text.setText( "APPLICATION CRASHED" )
+		LOG.clear()
+		LOG.write( "EXCEPTION OCCURED", str( e ) )

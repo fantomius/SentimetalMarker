@@ -13,8 +13,8 @@ class SentimentalEstimator:
 	def __init__( self, dictionaries_with_weights, neutral_treshold ):
 		u"""dictionaries_with_weights - словарь с двумя ключами "dict", который хранит класс, реализующий
 			SentimentalDictionary и "weight", который хранит вес, с которым учитывается словарь
-			neutral_treshold - порог, начиная с которого разница между положительной и отрицательной
-			оценкой начинает считаться как значимая (чтобы не считать предложений нейтральным)"""
+			neutral_treshold - порог, начиная с которого отношение между положительной и отрицательной
+			оценкой начинает считаться значимым (чтобы не считать предложений нейтральным)"""
 		self.dictionaries = dictionaries_with_weights
 		self.neutral_treshold = neutral_treshold
 

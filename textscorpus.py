@@ -58,14 +58,25 @@ class TextsCorpus:
 def get_sentences_quality( sentences, estimator ):
 	correct = 0
 	total = 0
+	# False positive, negative, neutral
+	fpos = 0
+	fneg = 0
+	fnet = 0
 	for sentence in sentences:
 		result = estimator.process_sentence( sentence["text"] )
 		if result == sentence["value"]:
 			correct = correct + 1
+		else:
+			if result == EstimatorResult.positive:
+				fpos = fpos + 1
+			elif result == EstimatorResult.neutral:
+				fnet = fnet + 1
+			else:
+				fneg = fneg + 1
 
 		total = total + 1
 
-	return (correct, total)
+	return (correct, total, fpos, fnet, fneg)
 
 #main
 def main():
@@ -78,7 +89,7 @@ def main():
 		{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
 		{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
 	]
-	neutral_treshold = 0.01818111
+	neutral_treshold = 1.21818111
 
 	estimator = se.SentimentalEstimator( dictionaries_with_weights, neutral_treshold )
 	base = TextsCorpus( "base/texts.txt" )

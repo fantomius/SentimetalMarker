@@ -29,9 +29,7 @@ def MinimizationFunc( x ):
 		{ "dict": DICTIONARIES[2], "weight": x[2] }
 	]
 
-	# neutral-treshold коэффициент делаем зависимым от первых 3-х, чтобы быть независым к масштабу
-	# Пример (1,1,1) с коэф-том 0.1 тоже самое что (2,2,2) с коэф-том 0.2
-	estimator = se.SentimentalEstimator( dictionaries_with_weights, x[3] * ( x[0] + x[1] + x[2] ) )
+	estimator = se.SentimentalEstimator( dictionaries_with_weights, x[3] )
 
 	# Строим сбалансированную выборку
 	sentences = np.random.choice( CORPUS.get_positive(), int( CHUNK_SIZE / 3 ), replace=False ).tolist()
@@ -51,7 +49,7 @@ def MinimizationFunc( x ):
 	return quality
 
 
-EVO_BOUNDS = [(0, 10), (0, 10), (0, 10), (0, 1)]
+EVO_BOUNDS = [(0, 10), (0, 10), (0, 10), (1, 2)]
 result = sp.optimize.differential_evolution( MinimizationFunc, EVO_BOUNDS )
 
 print( result.x )

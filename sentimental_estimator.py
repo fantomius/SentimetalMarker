@@ -37,13 +37,19 @@ class SentimentalEstimator:
 		LOG.write( "TOTAL POSITIVE", str( total_positive ) )
 		LOG.write( "TOTAL NEGATIVE", str( total_negative ) )
 
-		result = total_positive - total_negative
-		if abs( result ) < self.neutral_treshold:
-			return EstimatorResult.neutral
-		elif result > 0:
-			return EstimatorResult.positive
+		if total_negative == 0:
+			if total_positive > 0:
+				return EstimatorResult.positive
+			else:
+				return EstimatorResult.neutral
 		else:
-			return EstimatorResult.negative
+			ratio = total_positive / total_negative
+			if ratio > self.neutral_treshold:
+				return EstimatorResult.positive
+			elif ratio < 1 / self.neutral_treshold:
+				return EstimatorResult.negative
+			else:
+				return EstimatorResult.neutral
 
 	def __scores_by_dictionary( self, dict, words ):
 		u"""Вычисляет оценки предложения по словарю"""

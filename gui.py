@@ -67,7 +67,7 @@ class MainWindow(QtGui.QWidget):
 			{ "dict": dictionaries.WNAffectDictionary( data_path ), "weight": 7.59540434 },
 			{ "dict": dictionaries.LinisDictionary( data_path ), "weight": 3.71671178 }
 		]
-		neutral_treshold = 0.01818111
+		neutral_treshold = 1.21818111
 
 		self.estimator = se.SentimentalEstimator( dictionaries_with_weights, neutral_treshold )
 

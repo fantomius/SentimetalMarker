@@ -5,7 +5,7 @@ import numpy as np
 
 import dictionaries
 import textscorpus as txts
-import sentimental_estimator as se
+import estimator as se
 
 #Константы
 # Столько предложений мы просматриваем за одну итерацию дифф эволюции

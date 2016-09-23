@@ -1,6 +1,6 @@
 u"""Класс для работы с базой размеченных текстов"""
 
-from sentimental_estimator import EstimatorResult
+from estimator import EstimatorResult
 
 class TextsCorpus:
 	u'''Формат файла - строка текста табуляция оценка'''
